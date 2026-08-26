@@ -55,6 +55,7 @@ There are no checked-in helper scripts, CI workflows, or custom run configuratio
 - Keep repository writes suspendable and expose reactive state through `Flow`. Follow existing `dataStore.edit` plus JSON encode/decode patterns. Corrupt or absent rule JSON currently falls back to an empty list through `runCatching`; preserve this behavior unless the error contract changes.
 - In Compose, collect repository flows at the navigation boundary, hoist screen state, and pass event callbacks downward. Launch persistence mutations from the existing coroutine scope rather than adding a new state-management framework.
 - Reuse `ui/components` primitives and `ui/theme` tokens for expressive shapes, gradient containers, typography, and colors. Do not introduce one-off styling when an existing local component or token applies.
+- `SegmentedColumn` owns the rounded container background; `SegmentedColumnItem` uses a transparent `ListItem`, and its `HorizontalDivider` must span the full container width without a one-sided inset.
 - Changes to the accessibility service must preserve event filtering, excluded-package handling, app self-exclusion, editable-node checks, `ACTION_SET_TEXT`/selection ordering, and self-write debounce behavior.
 - Add Android manifest/service behavior through `AndroidManifest.xml` and `res/xml/accessibility_service_config.xml`; keep user-facing labels in `res/values/strings.xml`.
 
