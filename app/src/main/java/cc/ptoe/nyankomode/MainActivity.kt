@@ -10,14 +10,14 @@ import cc.ptoe.nyankomode.data.RuleRepository
 import cc.ptoe.nyankomode.data.SettingsRepository
 import cc.ptoe.nyankomode.data.appDataStore
 import cc.ptoe.nyankomode.ui.navigation.AppNavHost
-import cc.ptoe.nyankomode.ui.theme.本喵模式Theme
+import cc.ptoe.nyankomode.ui.theme.NyankoModeTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            本喵模式Theme {
+            NyankoModeTheme {
                 val context = LocalContext.current
                 val ruleRepository = remember { RuleRepository(context.appDataStore) }
                 val settingsRepository = remember { SettingsRepository(context.appDataStore) }
