@@ -1,0 +1,77 @@
+<resources>
+    <string name="app_name">本喵模式</string>
+    <string name="accessibility_service_label">本喵模式文本替换服务</string>
+    <string name="accessibility_service_description">监听全局文本输入：在光标处将配置的触发词替换为规则结果，支持多结果轮换/随机输出。仅在指定应用内生效，本应用内自动跳过。</string>
+
+    <string name="nav_home">首页</string>
+    <string name="nav_rules">规则</string>
+    <string name="nav_settings">设置</string>
+    <string name="home_title">本喵模式</string>
+    <string name="home_subtitle">文本映射服务</string>
+    <string name="service_status">服务状态</string>
+    <string name="service_enabled">服务已开启</string>
+    <string name="service_disabled">服务未开启</string>
+    <string name="service_enabled_summary">正在监听其他应用中的文本输入</string>
+    <string name="service_disabled_summary">轻触前往系统设置开启无障碍服务</string>
+    <string name="open_accessibility_settings">打开无障碍设置</string>
+    <string name="status_details">运行详情</string>
+    <string name="total_mapping">映射总开关</string>
+    <string name="setting_enabled">已启用</string>
+    <string name="setting_disabled">已关闭</string>
+    <string name="active_rules">启用规则</string>
+    <string name="active_rules_value">%1$d / %2$d 条</string>
+    <string name="excluded_apps">排除应用</string>
+    <string name="excluded_apps_value">%1$d 个</string>
+    <string name="home_actions">快捷操作</string>
+    <string name="manage_rules">管理规则</string>
+    <string name="manage_rules_summary">%1$d 条规则，%2$d 条已启用</string>
+    <string name="open_rules">打开规则页</string>
+    <string name="local_preview">本地预览</string>
+    <string name="local_preview_summary">无需启用服务即可试用当前规则</string>
+    <string name="open_preview">打开本地预览</string>
+
+    <string name="rules_title">规则</string>
+    <string name="add_rule">添加规则</string>
+    <string name="empty_rules_title">尚无规则</string>
+    <string name="empty_rules_summary">添加规则后，触发词会在光标处替换为对应结果。</string>
+    <string name="unnamed_rule">未命名规则</string>
+    <string name="empty_value">无</string>
+    <string name="rule_summary">触发词：%1$s\n结果：%2$s</string>
+    <string name="mode_rotate">轮换输出</string>
+    <string name="mode_random">随机输出</string>
+    <string name="rule_enabled">启用规则</string>
+
+    <string name="settings_title">设置</string>
+    <string name="mapping_section">映射</string>
+    <string name="total_mapping_summary">关闭后，所有规则都不会生效。</string>
+    <string name="accessibility_service">无障碍服务</string>
+    <string name="accessibility_service_summary">管理系统级服务授权。</string>
+    <string name="app_exclusions_section">应用排除</string>
+    <string name="no_excluded_apps">尚未排除任何应用</string>
+    <string name="no_excluded_apps_summary">本应用始终自动排除。</string>
+    <string name="add_excluded_app">添加排除应用</string>
+    <string name="remove_excluded_app">移除 %1$s</string>
+    <string name="excluded_apps_dialog_title">添加排除应用</string>
+    <string name="excluded_apps_dialog_summary">在所选应用中不会执行文本替换。</string>
+    <string name="cancel">取消</string>
+
+    <string name="create_rule_title">新建规则</string>
+    <string name="edit_rule_title">编辑规则</string>
+    <string name="navigate_back">返回</string>
+    <string name="rule_name">名称</string>
+    <string name="rule_name_placeholder">例如：本喵模式</string>
+    <string name="triggers">触发词</string>
+    <string name="outputs">结果</string>
+    <string name="add_trigger_placeholder">添加触发词</string>
+    <string name="add_output_placeholder">添加结果</string>
+    <string name="remove_value">移除 %1$s</string>
+    <string name="output_mode">输出模式</string>
+    <string name="enable_this_rule">启用此规则</string>
+    <string name="save_rule">保存</string>
+    <string name="delete_rule">删除规则</string>
+
+    <string name="preview_title">本地预览</string>
+    <string name="preview_description">输入触发词以预览替换结果，无需启用无障碍服务。</string>
+    <string name="preview_input_hint">试试输入：我</string>
+    <string name="preview_result">替换结果</string>
+</resources>
