@@ -46,8 +46,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import cc.ptoe.nyankomode.R
+import cc.ptoe.nyankomode.data.ExecutorType
 import cc.ptoe.nyankomode.data.MappingRule
 import cc.ptoe.nyankomode.data.OutputMode
+import cc.ptoe.nyankomode.data.TriggerType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,10 +61,13 @@ fun RuleEditorScreen(
 ) {
     var name by remember(rule) { mutableStateOf(rule?.name ?: "") }
     var triggers by remember(rule) { mutableStateOf(rule?.triggers ?: emptyList()) }
+    var triggerType by remember(rule) { mutableStateOf(rule?.triggerType ?: TriggerType.KEYWORD) }
     var outputs by remember(rule) { mutableStateOf(rule?.outputs ?: emptyList()) }
     var mode by remember(rule) { mutableStateOf(rule?.mode ?: OutputMode.ROTATE) }
+    var executorType by remember(rule) { mutableStateOf(rule?.executorType ?: ExecutorType.REPLACE) }
     var enabled by remember(rule) { mutableStateOf(rule?.enabled ?: true) }
-    val canSave = name.isNotBlank() && triggers.isNotEmpty() && outputs.isNotEmpty()
+    val canSave = name.isNotBlank() && outputs.isNotEmpty() &&
+        (triggerType != TriggerType.KEYWORD || triggers.isNotEmpty())
 
     Column(
         modifier = Modifier
@@ -101,13 +106,52 @@ fun RuleEditorScreen(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
-            StringListEditor(
-                title = stringResource(R.string.triggers),
-                placeholder = stringResource(R.string.add_trigger_placeholder),
-                values = triggers,
-                onAdd = { value -> if (value !in triggers) triggers = triggers + value },
-                onRemove = { triggers = triggers - it },
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(stringResource(R.string.trigger_type), style = MaterialTheme.typography.titleMedium)
+                val segments = listOf(
+                    stringResource(R.string.trigger_type_keyword) to TriggerType.KEYWORD,
+                    stringResource(R.string.trigger_type_new_line) to TriggerType.NEW_LINE,
+                    stringResource(R.string.trigger_type_send) to TriggerType.SEND,
+                )
+                SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+                    segments.forEachIndexed { index, (label, value) ->
+                        SegmentedButton(
+                            selected = triggerType == value,
+                            onClick = { triggerType = value },
+                            shape = SegmentedButtonDefaults.itemShape(index, segments.size),
+                            label = { Text(label) },
+                        )
+                    }
+                }
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(stringResource(R.string.executor_type), style = MaterialTheme.typography.titleMedium)
+                val segments = listOf(
+                    stringResource(R.string.executor_type_replace) to ExecutorType.REPLACE,
+                    stringResource(R.string.executor_type_insert_before) to ExecutorType.INSERT_BEFORE,
+                    stringResource(R.string.executor_type_insert_after) to ExecutorType.INSERT_AFTER,
+                )
+                SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+                    segments.forEachIndexed { index, (label, value) ->
+                        SegmentedButton(
+                            selected = executorType == value,
+                            onClick = { executorType = value },
+                            shape = SegmentedButtonDefaults.itemShape(index, segments.size),
+                            label = { Text(label) },
+                        )
+                    }
+                }
+            }
+
+            if (triggerType == TriggerType.KEYWORD) {
+                StringListEditor(
+                    title = stringResource(R.string.triggers),
+                    placeholder = stringResource(R.string.add_trigger_placeholder),
+                    values = triggers,
+                    onAdd = { value -> if (value !in triggers) triggers = triggers + value },
+                    onRemove = { triggers = triggers - it },
+                )
+            }
             StringListEditor(
                 title = stringResource(R.string.outputs),
                 placeholder = stringResource(R.string.add_output_placeholder),
@@ -149,7 +193,13 @@ fun RuleEditorScreen(
                         MappingRule(
                             id = rule?.id ?: System.currentTimeMillis().toString(),
                             name = name.trim(),
-                            triggers = triggers.map(String::trim).filter(String::isNotEmpty),
+                            triggers = if (triggerType == TriggerType.KEYWORD) {
+                                triggers.map(String::trim).filter(String::isNotEmpty)
+                            } else {
+                                emptyList()
+                            },
+                            triggerType = triggerType,
+                            executorType = executorType,
                             outputs = outputs.map(String::trim).filter(String::isNotEmpty),
                             mode = mode,
                             enabled = enabled,

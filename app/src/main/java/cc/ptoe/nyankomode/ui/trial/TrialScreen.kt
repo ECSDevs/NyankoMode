@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cc.ptoe.nyankomode.R
 import cc.ptoe.nyankomode.data.MappingRule
+import cc.ptoe.nyankomode.data.TriggerType
 import cc.ptoe.nyankomode.engine.MappingEngine
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,20 +39,23 @@ fun TrialScreen(
     onBack: () -> Unit,
 ) {
     var input by remember { mutableStateOf("") }
+    var explicitTriggerType by remember { mutableStateOf<TriggerType?>(null) }
     val engine = remember { MappingEngine() }
-    val rotateState = remember { mutableMapOf<String, Int>() }
-    val preview = remember(input, rules) {
-        var text = input
-        repeat(20) {
+    val preview = remember(input, rules, explicitTriggerType) {
+        val enabledRules = rules.filter(MappingRule::enabled)
+        val rotateState = mutableMapOf<String, Int>()
+        var text = engine.simulateTyping(input, enabledRules, rotateState)
+        if (explicitTriggerType == TriggerType.SEND) {
             val replacement = engine.findReplacement(
                 text = text,
                 cursor = text.length,
-                rules = rules.filter(MappingRule::enabled),
+                rules = enabledRules,
                 rotateState = rotateState,
-            ) ?: return@repeat
-            text = text.substring(0, replacement.start) +
-                replacement.output +
-                text.substring(replacement.end)
+                triggerType = TriggerType.SEND,
+            )
+            if (replacement != null) {
+                text = text.replaceRange(replacement.start, replacement.end, replacement.output)
+            }
         }
         text
     }
@@ -77,11 +82,20 @@ fun TrialScreen(
             )
             OutlinedTextField(
                 value = input,
-                onValueChange = { input = it },
+                onValueChange = {
+                    input = it
+                    explicitTriggerType = null
+                },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(stringResource(R.string.preview_input_hint)) },
                 minLines = 3,
             )
+            Button(
+                onClick = { explicitTriggerType = TriggerType.SEND },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(stringResource(R.string.preview_send))
+            }
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(

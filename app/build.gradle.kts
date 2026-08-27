@@ -31,9 +31,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    buildFeatures {
-        compose = true
-    }
+}
+
+configurations.configureEach {
+    resolutionStrategy.force(
+        "androidx.core:core:1.16.0",
+        "androidx.core:core-ktx:1.16.0",
+    )
 }
 
 dependencies {

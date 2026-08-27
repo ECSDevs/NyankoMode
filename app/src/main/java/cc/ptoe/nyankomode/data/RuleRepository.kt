@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.serialization.json.Json
 
 class RuleRepository(private val dataStore: DataStore<Preferences>) {
@@ -17,10 +18,14 @@ class RuleRepository(private val dataStore: DataStore<Preferences>) {
         ignoreUnknownKeys = true
     }
 
-    val rules: Flow<List<MappingRule>> = dataStore.data.map { prefs ->
-        val payload = prefs[rulesKey] ?: return@map emptyList()
-        runCatching { json.decodeFromString<List<MappingRule>>(payload) }.getOrElse { emptyList() }
-    }
+    val rules: Flow<List<MappingRule>> = dataStore.data
+        .map { prefs -> prefs[rulesKey] }
+        .distinctUntilChanged()
+        .map { payload ->
+            if (payload == null) emptyList()
+            else runCatching { json.decodeFromString<List<MappingRule>>(payload) }
+                .getOrElse { emptyList() }
+        }
 
     suspend fun upsert(rule: MappingRule) {
         dataStore.edit { prefs ->

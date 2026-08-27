@@ -18,9 +18,11 @@ class MappingRuleSerializationTest {
             id = "rule-1",
             name = "自称词",
             triggers = listOf("我", "偶"),
+            triggerType = TriggerType.KEYWORD,
+            executorType = ExecutorType.INSERT_AFTER,
             outputs = listOf("本喵", "喵呜"),
             mode = OutputMode.ROTATE,
-            enabled = true
+            enabled = true,
         )
 
         val encoded = json.encodeToString(rule)
@@ -32,8 +34,24 @@ class MappingRuleSerializationTest {
     @Test
     fun `rule list round trip`() {
         val rules = listOf(
-            MappingRule(id = "a", name = "规则A", triggers = listOf("我"), outputs = listOf("本喵"), mode = OutputMode.ROTATE),
-            MappingRule(id = "b", name = "规则B", triggers = listOf("你"), outputs = listOf("乃们"), mode = OutputMode.RANDOM, enabled = false)
+            MappingRule(
+                id = "a",
+                name = "规则A",
+                triggers = listOf("我"),
+                triggerType = TriggerType.KEYWORD,
+                outputs = listOf("本喵"),
+                mode = OutputMode.ROTATE,
+            ),
+            MappingRule(
+                id = "b",
+                name = "规则B",
+                triggers = listOf("你"),
+                triggerType = TriggerType.SEND,
+                executorType = ExecutorType.INSERT_BEFORE,
+                outputs = listOf("乃们"),
+                mode = OutputMode.RANDOM,
+                enabled = false,
+            ),
         )
 
         val encoded = json.encodeToString(rules)
@@ -51,6 +69,8 @@ class MappingRuleSerializationTest {
         assertEquals("only-id", decoded.id)
         assertEquals("缺字段", decoded.name)
         assertEquals(emptyList<String>(), decoded.triggers)
+        assertEquals(TriggerType.KEYWORD, decoded.triggerType)
+        assertEquals(ExecutorType.REPLACE, decoded.executorType)
         assertEquals(emptyList<String>(), decoded.outputs)
         assertEquals(OutputMode.ROTATE, decoded.mode)
         assertEquals(true, decoded.enabled)

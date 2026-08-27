@@ -27,9 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cc.ptoe.nyankomode.R
+import cc.ptoe.nyankomode.data.ExecutorType
 import cc.ptoe.nyankomode.data.MappingRule
 import cc.ptoe.nyankomode.data.OutputMode
-
+import cc.ptoe.nyankomode.data.TriggerType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RulesScreen(
@@ -101,20 +102,38 @@ private fun RuleCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             androidx.compose.foundation.layout.Column(modifier = Modifier.weight(1f)) {
+                val triggerTypeLabel = stringResource(
+                    when (rule.triggerType) {
+                        TriggerType.KEYWORD -> R.string.trigger_type_keyword
+                        TriggerType.NEW_LINE -> R.string.trigger_type_new_line
+                        TriggerType.SEND -> R.string.trigger_type_send
+                    },
+                )
                 Text(
                     text = rule.name.ifBlank { stringResource(R.string.unnamed_rule) },
                     style = MaterialTheme.typography.titleMedium,
                 )
                 Text(
-                    text = stringResource(
-                        R.string.rule_summary,
-                        rule.triggers.joinToString(" / ").ifBlank {
-                            stringResource(R.string.empty_value)
-                        },
-                        rule.outputs.joinToString(" / ").ifBlank {
-                            stringResource(R.string.empty_value)
-                        },
-                    ),
+                    text = if (rule.triggerType == TriggerType.KEYWORD) {
+                        stringResource(
+                            R.string.rule_summary_keyword,
+                            triggerTypeLabel,
+                            rule.triggers.joinToString(" / ").ifBlank {
+                                stringResource(R.string.empty_value)
+                            },
+                            rule.outputs.joinToString(" / ").ifBlank {
+                                stringResource(R.string.empty_value)
+                            },
+                        )
+                    } else {
+                        stringResource(
+                            R.string.rule_summary_event,
+                            triggerTypeLabel,
+                            rule.outputs.joinToString(" / ").ifBlank {
+                                stringResource(R.string.empty_value)
+                            },
+                        )
+                    },
                     modifier = Modifier.padding(top = 4.dp),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -128,6 +147,21 @@ private fun RuleCard(
                         },
                     ),
                     modifier = Modifier.padding(top = 8.dp),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Text(
+                    text = stringResource(
+                        R.string.executor_type_summary,
+                        stringResource(
+                            when (rule.executorType) {
+                                ExecutorType.REPLACE -> R.string.executor_type_replace
+                                ExecutorType.INSERT_BEFORE -> R.string.executor_type_insert_before
+                                ExecutorType.INSERT_AFTER -> R.string.executor_type_insert_after
+                            },
+                        ),
+                    ),
+                    modifier = Modifier.padding(top = 4.dp),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )

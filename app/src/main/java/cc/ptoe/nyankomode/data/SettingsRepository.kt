@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 class SettingsRepository(private val dataStore: DataStore<Preferences>) {
@@ -13,9 +14,9 @@ class SettingsRepository(private val dataStore: DataStore<Preferences>) {
     private val totalEnabledKey = booleanPreferencesKey("total_enabled")
     private val excludedAppsKey = stringSetPreferencesKey("excluded_apps")
 
-    val totalEnabled: Flow<Boolean> = dataStore.data.map { prefs ->
-        prefs[totalEnabledKey] ?: true
-    }
+    val totalEnabled: Flow<Boolean> = dataStore.data
+        .map { prefs -> prefs[totalEnabledKey] ?: true }
+        .distinctUntilChanged()
 
     suspend fun setTotalEnabled(enabled: Boolean) {
         dataStore.edit { prefs ->
@@ -23,9 +24,9 @@ class SettingsRepository(private val dataStore: DataStore<Preferences>) {
         }
     }
 
-    val excludedApps: Flow<Set<String>> = dataStore.data.map { prefs ->
-        prefs[excludedAppsKey] ?: emptySet()
-    }
+    val excludedApps: Flow<Set<String>> = dataStore.data
+        .map { prefs -> prefs[excludedAppsKey] ?: emptySet() }
+        .distinctUntilChanged()
 
     suspend fun setExcludedApps(apps: Set<String>) {
         dataStore.edit { prefs ->

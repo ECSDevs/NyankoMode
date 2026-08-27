@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">本喵模式</string>
     <string name="accessibility_service_label">本喵模式文本替换服务</string>
-    <string name="accessibility_service_description">监听全局文本输入：在光标处将配置的触发词替换为规则结果，支持多结果轮换/随机输出。仅在指定应用内生效，本应用内自动跳过。</string>
+    <string name="accessibility_service_description">监听全局文本输入：支持关键词、换行和发送三种触发方式，可从规则结果中轮换或随机输出。本应用内自动跳过。</string>
 
     <string name="nav_home">首页</string>
     <string name="nav_rules">规则</string>
@@ -33,10 +33,11 @@
     <string name="rules_title">规则</string>
     <string name="add_rule">添加规则</string>
     <string name="empty_rules_title">尚无规则</string>
-    <string name="empty_rules_summary">添加规则后，触发词会在光标处替换为对应结果。</string>
+    <string name="empty_rules_summary">添加规则后，触发词会按执行方式处理为对应结果。</string>
     <string name="unnamed_rule">未命名规则</string>
     <string name="empty_value">无</string>
-    <string name="rule_summary">触发词：%1$s\n结果：%2$s</string>
+    <string name="rule_summary_keyword">触发方式：%1$s · 触发词：%2$s\n结果：%3$s</string>
+    <string name="rule_summary_event">触发方式：%1$s\n结果：%2$s</string>
     <string name="mode_rotate">轮换输出</string>
     <string name="mode_random">随机输出</string>
     <string name="rule_enabled">启用规则</string>
@@ -61,17 +62,27 @@
     <string name="rule_name">名称</string>
     <string name="rule_name_placeholder">例如：本喵模式</string>
     <string name="triggers">触发词</string>
+    <string name="trigger_type">触发方式</string>
+    <string name="trigger_type_keyword">关键词</string>
+    <string name="trigger_type_new_line">换行</string>
+    <string name="trigger_type_send">发送</string>
+    <string name="executor_type">执行方式</string>
+    <string name="executor_type_replace">替换当前</string>
+    <string name="executor_type_insert_before">插入之前</string>
+    <string name="executor_type_insert_after">插入之后</string>
     <string name="outputs">结果</string>
     <string name="add_trigger_placeholder">添加触发词</string>
     <string name="add_output_placeholder">添加结果</string>
     <string name="remove_value">移除 %1$s</string>
     <string name="output_mode">输出模式</string>
+    <string name="executor_type_summary">执行方式：%1$s</string>
     <string name="enable_this_rule">启用此规则</string>
     <string name="save_rule">保存</string>
     <string name="delete_rule">删除规则</string>
 
     <string name="preview_title">本地预览</string>
-    <string name="preview_description">输入触发词以预览替换结果，无需启用无障碍服务。</string>
+    <string name="preview_description">输入关键词或换行以预览执行结果；也可模拟发送触发发送规则。</string>
     <string name="preview_input_hint">试试输入：我</string>
+    <string name="preview_send">模拟发送</string>
     <string name="preview_result">替换结果</string>
 </resources>
