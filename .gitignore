@@ -15,3 +15,8 @@
 local.properties
 /.trae
 /.kotlin
+
+# Local Android signing material
+/signing.properties
+/*.jks
+/*.keystore

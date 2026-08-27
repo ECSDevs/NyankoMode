@@ -1,7 +1,31 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+}
+
+val signingProperties = Properties().apply {
+    val signingFile = rootProject.file("signing.properties")
+    if (signingFile.isFile) signingFile.inputStream().use(::load)
+}
+
+fun requiredSigningValue(name: String): String =
+    signingProperties.getProperty(name)?.takeIf { it.isNotBlank() }
+        ?: providers.gradleProperty("signing.$name").orNull?.takeIf { it.isNotBlank() }
+        ?: error(
+            "Missing signing.$name. Configure root signing.properties " +
+                "or pass -Psigning.$name=<value>."
+        )
+
+val signingStoreFile = rootProject.file(requiredSigningValue("storeFile"))
+val signingStorePassword = requiredSigningValue("storePassword")
+val signingKeyAlias = requiredSigningValue("keyAlias")
+val signingKeyPassword = requiredSigningValue("keyPassword")
+
+check(signingStoreFile.isFile) {
+    "Signing keystore does not exist: ${signingStoreFile.absolutePath}"
 }
 
 android {
@@ -20,11 +44,24 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("nyanko") {
+            storeFile = signingStoreFile
+            storePassword = signingStorePassword
+            keyAlias = signingKeyAlias
+            keyPassword = signingKeyPassword
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("nyanko")
+        }
         release {
             optimization {
                 enable = false
             }
+            signingConfig = signingConfigs.getByName("nyanko")
         }
     }
     compileOptions {
